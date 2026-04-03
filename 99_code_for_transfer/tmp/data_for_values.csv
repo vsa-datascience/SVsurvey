@@ -1,0 +1,266 @@
+scale,valn,valc
+srvyprjr,1,Voorjaar 2021
+srvyprjr,2,Najaar 2021
+srvyprjr,3,Voorjaar 2022
+srvyprjr,4,Najaar 2022
+srvyprjr,5,Voorjaar 2023
+srvyprjr,6,Najaar 2023
+srvyprjr,7,Voorjaar 2024
+srvyprjr,8,Najaar 2024
+srvyprjr,9,Voorjaar 2025
+srvyprjr,10,Najaar 2025
+srvyprjr,11,Voorjaar 2026
+srvyprjr,12,Najaar 2026
+srvyprjr,13,Voorjaar 2027
+srvyprjr,14,Najaar 2027
+srvyprjr,15,Voorjaar 2028
+srvyprjr,16,Najaar 2028
+srvyprjr,17,Voorjaar 2029
+srvyprjr,18,Najaar 2029
+srvyprjr,19,Voorjaar 2030
+srvyprjr,20,Najaar 2030
+vwperiod,1,SV1
+vwperiod,2,SV2-SV3
+vwperiod,3,SV4
+vwperiod,4,SV5-SV6
+vwperiod,5,SV7
+vwperiod,6,SV8-SV9
+vwperiod,7,SV10
+vwperiod,8,SV11-SV12
+vwperiod,9,SV13
+vwperiod,10,SV14-SV15
+respdisp,1.1,Volledig antwoord
+respdisp,1.2,Partieel antwoord
+respdisp,2.11,Weigering
+respdisp,2.12,Break-off
+respdisp,2.27,Te laat
+respdisp,2.31,Gestorven
+respdisp,2.32,Niet bekwaam
+respdisp,2.33,Taalprobleem
+respdisp,2.36,Verkeerde respondent
+respdisp,3.21,Onbereikbaar
+respons,1,Respondent
+respons,2,Nonrespondent
+respmode,1,Online
+respmode,2,Schriftelijk
+respqrur,1,QR
+respqrur,2,URL
+respdevice,1,PC
+respdevice,2,Smartphone
+respdevice,3,Tablet
+resptime,1,Na 1ste uitnodiging
+resptime,2,Na 1ste herinnering
+resptime,3,Na 2de herinnering
+all,1,Alle respondenten
+rrgslcht,1,Man
+rrgslcht,2,Vrouw
+rrnation,1,Belg
+rrnation,2,Niet-Belg EU
+rrnation,3,Niet-Belg niet-EU
+rrprovin,1,Antwerpen
+rrprovin,2,Vlaams-Brabant
+rrprovin,3,West-Vlaanderen
+rrprovin,4,Oost-Vlaanderen
+rrprovin,5,Limburg
+rrurban,1,Grootsteden
+rrurban,2,Centrumsteden
+rrurban,3,Stedelijke rand
+rrurban,4,Kleinere steden
+rrurban,5,Overgangsgebied
+rrurban,6,Platteland
+rrurbgr,1,Verstedelijkt
+rrurbgr,2,Randstedelijk
+rrurbgr,3,Landelijk
+rragect7,1,18-24 jaar
+rragect7,2,25-34 jaar
+rragect7,3,35-44 jaar
+rragect7,4,45-54 jaar
+rragect7,5,55-64 jaar
+rragect7,6,65-74 jaar
+rragect7,7,75 jaar en ouder
+rragect4,1,18-34 jaar
+rragect4,2,35-49 jaar
+rragect4,3,50-64 jaar
+rragect4,4,65 jaar en ouder
+geslacht,1,Man
+geslacht,2,Vrouw
+geslacht,3,X
+maand,1,januari
+maand,2,februari
+maand,3,maart
+maand,4,april
+maand,5,mei
+maand,6,juni
+maand,7,juli
+maand,8,augustus
+maand,9,september
+maand,10,oktober
+maand,11,november
+maand,12,december
+profsit,1,"Betaald werk als werknemer, zelfstandige of ambtenaar (al dan niet tijdelijk werkloos)"
+profsit,2,Werkzoekend
+profsit,3,Gepensioneerd of op brugpensioen
+profsit,4,Student of scholier
+profsit,5,Huisvrouw of -man
+profsit,6,Invaliditeit of arbeidsongeschiktheid
+profsit,7,Een andere situatie
+profsitb,1,"Betaald werk als werknemer, zelfstandige of ambtenaar (al dan niet tijdelijk werkloos)"
+profsitb,2,Gepensioneerd of op brugpensioen
+profsitb,3,Andere situatie
+diploma,1,Geen
+diploma,2,Lager onderwijs
+diploma,3,Lager secundair onderwijs
+diploma,4,Hoger secundair onderwijs
+diploma,5,Hoger niet-universitair onderwijs
+diploma,6,Universitair onderwijs
+diploma,7,Een ander diploma
+oplniv4,1,Laaggeschoold
+oplniv4,2,Middengeschoold
+oplniv4,3,Hooggeschoold
+oplniv4,4,Ander
+oplniv3,1,Laaggeschoold
+oplniv3,2,Middengeschoold
+oplniv3,3,Hooggeschoold
+hhpos,1,Woont alleen
+hhpos,2,Woont met partner zonder kinderen
+hhpos,3,Woont met partner en kind(eren)
+hhpos,4,Woont niet met partner wel met kind(eren)
+hhpos,5,Woont bij ouders
+hhpos,6,Ander
+hhposb,1,Woont alleen
+hhposb,2,Woont met partner zonder kinderen
+hhposb,3,Woont met partner en kind(eren)
+hhposb,4,Woont niet met partner wel met kind(eren)
+hhposb,5,Ander
+hhposc,1,Woont alleen
+hhposc,2,Woont met partner zonder kinderen
+hhposc,3,Woont met partner en kind(eren)
+hhposc,4,Woont niet met partner wel met kind(eren)
+hhposc,5,Woont bij ouders
+woonomg,1,Het centrum van een stad
+woonomg,2,Een buitenwijk van een stad
+woonomg,3,Een verstedelijkte gemeente
+woonomg,4,Een landelijke gemeente
+woonomg,5,Anders
+woonomgb,1,Het centrum van een stad
+woonomgb,2,De rand van een stad
+woonomgb,3,Het centrum van een (deel)gemeente
+woonomgb,4,De rand van een (deel)gemeente
+woonomgb,5,Anders
+janeen,0,Neen
+janeen,1,Ja
+moeimakk,1,Zeer moeilijk
+moeimakk,2,Moeilijk
+moeimakk,3,Eerder moeilijk
+moeimakk,4,Eerder gemakkelijk
+moeimakk,5,Gemakkelijk
+moeimakk,6,Zeer gemakkelijk
+goedslec,1,Zeer goed
+goedslec,2,Goed
+goedslec,3,Redelijk
+goedslec,4,Slecht
+goedslec,5,Zeer slecht
+zeafvrdr,1,Zelden of niet
+zeafvrdr,2,Af en toe
+zeafvrdr,3,Voortdurend
+freqmnd,1,Nooit
+freqmnd,2,Minder dan 1 keer per maand
+freqmnd,3,1 of meerdere keren per maand
+freqmnd,4,1 of meerdere keren per week
+freqmnd,5,Dagelijks of bijna dagelijks
+gebrfreq,1,Nooit
+gebrfreq,2,1 of meerdere keren per jaar
+gebrfreq,3,1 of meerdere keren per maand
+gebrfreq,4,1 of meerdere keren per week
+gebrfreq,5,Dagelijks of bijna dagelijks
+weinveel,1,Heel weinig
+weinveel,2,Weinig
+weinveel,3,"Niet veel, niet weinig"
+weinveel,4,Veel
+weinveel,5,Heel veel
+tevreden,1,Heel ontevreden
+tevreden,2,Ontevreden
+tevreden,3,"Niet tevreden, niet ontevreden"
+tevreden,4,Tevreden
+tevreden,5,Heel tevreden
+tvrdnsc,0,0: heel ontevreden
+tvrdnsc,1,1
+tvrdnsc,2,2
+tvrdnsc,3,3
+tvrdnsc,4,4
+tvrdnsc,5,5
+tvrdnsc,6,6
+tvrdnsc,7,7
+tvrdnsc,8,8
+tvrdnsc,9,9
+tvrdnsc,10,10: heel tevreden
+noitaltd,1,Nooit
+noitaltd,2,Zelden
+noitaltd,3,Soms
+noitaltd,4,Meestal
+noitaltd,5,Altijd
+onnseens,1,Helemaal oneens
+onnseens,2,Oneens
+onnseens,3,"Niet eens, niet oneens"
+onnseens,4,Eens
+onnseens,5,Helemaal eens
+ntvkaltd,1,Nooit
+ntvkaltd,2,Zelden
+ntvkaltd,3,Soms
+ntvkaltd,4,Vaak
+ntvkaltd,5,Altijd
+cntfreq,1,Nooit
+cntfreq,2,Minder dan 1 keer per maand
+cntfreq,3,1 of 2 keer per maand
+cntfreq,4,1 of 2 keer per week
+cntfreq,5,Dagelijks of bijna dagelijks
+vm_vertr,0,0: Men kan niet voorzichtig genoeg zijn in de omgang met mensen
+vm_vertr,1,1
+vm_vertr,2,2
+vm_vertr,3,3
+vm_vertr,4,4
+vm_vertr,5,5
+vm_vertr,6,6
+vm_vertr,7,7
+vm_vertr,8,8
+vm_vertr,9,9
+vm_vertr,10,10: De meeste mensen zijn te vertrouwen
+vm_misbr,0,0: De meeste mensen zouden proberen misbruik van mij te maken als zij daartoe de kans krijgen
+vm_misbr,1,1
+vm_misbr,2,2
+vm_misbr,3,3
+vm_misbr,4,4
+vm_misbr,5,5
+vm_misbr,6,6
+vm_misbr,7,7
+vm_misbr,8,8
+vm_misbr,9,9
+vm_misbr,10,10: De meeste mensen proberen eerlijk te zijn
+vm_bhulp,0,0: Mensen denken meestal aan zichzelf
+vm_bhulp,1,1
+vm_bhulp,2,2
+vm_bhulp,3,3
+vm_bhulp,4,4
+vm_bhulp,5,5
+vm_bhulp,6,6
+vm_bhulp,7,7
+vm_bhulp,8,8
+vm_bhulp,9,9
+vm_bhulp,10,10: Mensen proberen meestal behulpzaam te zijn
+infzrel,1,Mijn echtgeno(ot)t(e)/partner
+infzrel,2,Mijn (schoon)kind
+infzrel,3,Mijn ouder
+infzrel,4,Mijn schoonouder
+infzrel,5,Mijn (schoon)zus of (schoon)broer
+infzrel,6,Mijn grootouder
+infzrel,7,Mijn buur
+infzrel,8,Vriend(in)
+infzrel,9,Iemand anders
+hindmate,1,helemaal niet gehinderd
+hindmate,2,een beetje gehinderd
+hindmate,3,tamelijk gehinderd
+hindmate,4,ernstig gehinderd
+hindmate,5,extreem gehinderd
+missing,991,Niet van toepassing
+missing,998,Weet niet/geen antwoord
+missing,999,Ongeldig
