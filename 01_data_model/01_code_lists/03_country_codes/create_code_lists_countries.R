@@ -7,9 +7,9 @@ library(tidyverse)
 # dplyr (filter/mutate/join), tidyr (pivot/nest/unnest), purrr (map/walk),
 # stringr (string helpers), tibble (modern data frames), etc.
 
-inputfolder <- r"{01_create_code_lists\03_country_codes\input}"
+inputfolder <- "01_data_model/01_code_lists/03_country_codes/input"
 # This is the folder where we will load the input files from.
-outputfolder <- r"{..\03_deriveddata\01_codelists}"
+outputfolder <- "../03_deriveddata/01_codelists"
 # This is the folder where we will write the generated Excel files (one per codelist).
 
 

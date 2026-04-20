@@ -7,6 +7,9 @@ library(tidyverse)
 # dplyr (filter/mutate/join), tidyr (pivot/nest/unnest), purrr (map/walk),
 # stringr (string helpers), tibble (modern data frames), etc.
 
+
+inputfolder <- "01_data_model/01_code_lists/01_general_codelists/input"
+# This is the folder where we will load the input files from.
 outputfolder <- "../03_deriveddata/01_codelists"
 # This is the folder where we will write the generated Excel files (one per codelist).
 
@@ -15,7 +18,8 @@ outputfolder <- "../03_deriveddata/01_codelists"
 # Load the "value list" (master list with metadata)
 # -------------------------------------------------------------------------
 
-values <- "01_create_code_lists/01_general_codelists/input/code_lists_values.xlsx" |>
+values <- inputfolder |>
+   file.path("code_lists_values.xlsx") |>
   readxl::read_xlsx()
 # Read in the master Excel file containing metadata about values.
 # Example columns:
@@ -46,9 +50,9 @@ read_xlsx_to_list <- function(path) {
   # map(...) reads each sheet and returns a list of tibbles
 }
 
-skeletons <-
-  "01_create_code_lists/01_general_codelists/input/code_lists_skeletons.xlsx" |>
-  read_xlsx_to_list()
+skeletons <- inputfolder |>
+   file.path("code_lists_skeletons.xlsx") |>
+   read_xlsx_to_list()
 # Read the skeleton workbook into a named list of tibbles.
 # Example: skeletons[["yesno"]] is the tibble from sheet "yesno".
 

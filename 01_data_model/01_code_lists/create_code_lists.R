@@ -27,6 +27,6 @@ dir.create(outputfolder)
 # Source all codes
 # -------------------------------------------------------------------------
 
-source(r"{01_create_code_lists\01_general_codelists\create_general_code_lists.R}")
-source(r"{01_create_code_lists\02_NIS_codes\create_code_lists_NIScodes.R}")
-source(r"{01_create_code_lists\03_country_codes\create_code_lists_countries.R}")
+source("01_data_model/01_code_lists/01_general_codelists/create_general_code_lists.R")
+source("01_data_model/01_code_lists/02_NIS_codes/create_code_lists_NIScodes.R")
+source("01_data_model/01_code_lists/03_country_codes/create_code_lists_countries.R")

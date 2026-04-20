@@ -46,10 +46,10 @@ folder <- r"{\\WV162699\fs_kb_dkb\svr\4_Beveiligde_data\SV-bevragingen\01_Metada
 
 # create concept list -----------------------------------------------------
 
-tmp1 <- "99_code_for_transfer/input/recode_variables.xlsx" |>
+tmp1 <- "XX_code_for_transfer/input/recode_variables.xlsx" |>
    readxl::read_xlsx()
 
-tmp2 <- "99_code_for_transfer/input/recode_code_lists.xlsx" |>
+tmp2 <- "XX_code_for_transfer/input/recode_code_lists.xlsx" |>
    readxl::read_xlsx() |>
    select(old_scale,scale) |>
    distinct() |>
@@ -91,7 +91,7 @@ tmp4 <- tmp3 |>
 # writexl::write_xlsx(tmp4,r"{02_create_data_structure_definitions\input\dsd_variables.xlsx}")
 
 
-tmp <- r"{..\02_sourcedata\SV0001\01_sample\SAMP_VSA_SV_THEMATIQUE.xlsx}" |>
+tmp5 <- r"{..\02_sourcedata\SV0001\01_sample\SAMP_VSA_SV_THEMATIQUE.xlsx}" |>
    readxl::read_xlsx() |>
    names() |>
    enframe(value="variable_sampledata",name=NULL) |>
@@ -99,9 +99,20 @@ tmp <- r"{..\02_sourcedata\SV0001\01_sample\SAMP_VSA_SV_THEMATIQUE.xlsx}" |>
    select(variable,variable_sampledata)
 # writexl::write_xlsx(tmp1,r"{02_create_data_structure_definitions\input\dsd_SV0001_sample_skeleton.xlsx}")
 
+tmp6 <- r"{..\02_sourcedata\SV0001\02_survey\SV - Datafile - Finaal.sav}" |>
+   haven::read_sav() |>
+   labelled::get_variable_labels() |>
+   enframe(name="variable",value="variable_label") |>
+   mutate(variable_label=map_chr(variable_label,unlist))
 
+tmp7 <- tmp3 |>
+   filter_out(is.na(SV0001)) |>
+   filter_out(SV0001=="afgeleid") |>
+   select(concept_id=new_varname,variable=SV0001,label_nl) |>
+   mutate(variable=str_to_sentence(variable)) |>
+   full_join(tmp6,join_by(variable))
 
-
+# writexl::write_xlsx(tmp7,r"{02_create_data_structure_definitions\input\dsd_SV0001_survey_skeleton.xlsx}")
 
 
 
