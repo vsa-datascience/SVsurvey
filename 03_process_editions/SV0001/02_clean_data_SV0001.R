@@ -17,10 +17,8 @@ data_sample <-
    select(-CD_ZIP_RES,-gemeente,-geslacht,-CNTRY_BTH,-CNTRY_NAT) |>
    mutate(
       CD_CNTRY_BTH=replace_na(CD_CNTRY_BTH,"999"),
-      CD_nat=CD_nat-8000,
       CD_SEX=as.numeric(CD_SEX),
       CD_CNTRY_BTH=replace_values(CD_CNTRY_BTH,"134"~"999"),
-      CD_nat=replace_values(CD_nat,c(788,785,822,873,782,855,700,821,802,760,789,819,902)~999)
       )
 
 
@@ -34,9 +32,9 @@ tmp_idlink <-
    transmute(Respondentnummer=idfinaal,pseudo_id=`pseudo-id`)
 
 tmp_recodes <-
-   r"{03_process_editions\%s\input\%s_hercodering_obv_tekstvakken.csv}" |>
+   r"{03_process_editions\%s\input\%s_hercodering_obv_tekstvakken.xlsx}" |>
    sprintf(the_surv_id,the_surv_id) |>
-   read_csv2(col_types=cols(Respondentnummer='d',variable='c',value='n')) |>
+   readxl::read_xlsx() |>
    pivot_wider(id_cols=Respondentnummer,names_from=variable,values_from=value)
 
 tmp_varlabels <-
@@ -54,8 +52,6 @@ data_survey <-
       V2_1 = replace_values(V2_1,1534~1934,4307~NA),
       V2_2 = replace_values(V2_2,21~12),
       Ingevuld = replace_values(Ingevuld,
-         "Ja (minstens 1 vraag)"~'Volledig antwoord',
-         "Neen, blanco / geen medewerking"~'Weigering',
          "2.31"~'Gestorven',
          "2.32"~'Incapabel',
          "2.36"~'Verkeerde respondent'
@@ -71,19 +67,13 @@ data_survey <-
     across(
       where(is.character),
       \(x) replace_values(x,
+        'Meerdere antwoorden'~'Ongeldig',
         'Dubbel antwoord'~'Ongeldig',
         'Geen opgave'~NA,
         'Niet geselecteerd'~'Neen',
         "weet niet/geen antwoord"~'Weet niet/geen antwoord',
-        "Meerdere antwoorden"~'Ongeldig'
         )
       ),
-    V3 = replace_values(V3,
-      "Betaald werk als werknemer of zelfstandige (al dan niet tijdelijk werkloos)"~'Betaald werk als werknemer, zelfstandige of ambtenaar (al dan niet tijdelijk werkloos)',
-      "Anders (omschrijf) :"~'Een andere situatie'
-      ),
-    V4 = replace_values(V4,"Anders (omschrijf):"~'Een ander diploma'),
-    V6 =  replace_values(V6,"Anders (omschrijf) :"~'Anders'),
     across(V19|V20|V21|V22|V23,
       \(x) replace_values(x,
         "0"~'0: heel ontevreden',
@@ -108,7 +98,6 @@ data_survey <-
     )
 
 rm(list=ls(pattern="^tmp"))
-
 
 
 # -------------------------------------------------------------------------

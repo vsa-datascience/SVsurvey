@@ -127,8 +127,8 @@ validate_data <- function(data,dsd,order_variables=TRUE,silent=FALSE) {
    codelists <- dsd |>
       dplyr::filter(constraint_type=='codelist' ) |>
       dplyr::mutate(
-         hasvalue  = purrr::map_lgl(constraint_codelist,\(x) 'value'  %in% names(x)),
-         hasvaluen = purrr::map_lgl(constraint_codelist,\(x) 'valuen' %in% names(x)),
+         hasvalue  = purrr::map_lgl(constraint_codelist_ds,\(x) 'value'  %in% names(x)),
+         hasvaluen = purrr::map_lgl(constraint_codelist_ds,\(x) 'valuen' %in% names(x)),
          )
 
    tmp <- codelists |>
@@ -146,8 +146,8 @@ validate_data <- function(data,dsd,order_variables=TRUE,silent=FALSE) {
    tmp <- codelists |>
       dplyr::filter(class=='numeric' & hasvaluen) |>
       dplyr::mutate(
-         constraint_codelist=purrr::map(constraint_codelist,\(x) dplyr::pull(x,'valuen')),
-         message=purrr::map2_chr(concept_id,constraint_codelist,\(x,y) data[[x]] |> na.omit() |> setdiff(y) |> stringr::str_c(collapse='; ') )
+         constraint_codelist_ds=purrr::map(constraint_codelist_ds,\(x) dplyr::pull(x,'valuen')),
+         message=purrr::map2_chr(concept_id,constraint_codelist_ds,\(x,y) data[[x]] |> na.omit() |> setdiff(y) |> stringr::str_c(collapse='; ') )
          ) |>
       dplyr::filter(message!='') |>
       dplyr::mutate(message=sprintf('%s: numeric values not in codelist: %s',concept_id,message)) |>
@@ -157,8 +157,8 @@ validate_data <- function(data,dsd,order_variables=TRUE,silent=FALSE) {
    tmp <- codelists |>
       dplyr::filter(class %in% c('character','factor') & hasvalue) |>
       dplyr::mutate(
-         constraint_codelist=purrr::map(constraint_codelist,\(x) dplyr::pull(x,'value')),
-         message=purrr::map2(concept_id,constraint_codelist,\(x,y) data[[x]] |> na.omit() |> setdiff(y) |> stringr::str_c(collapse='; ') )
+         constraint_codelist_ds=purrr::map(constraint_codelist_ds,\(x) dplyr::pull(x,'value')),
+         message=purrr::map2(concept_id,constraint_codelist_ds,\(x,y) data[[x]] |> na.omit() |> setdiff(y) |> stringr::str_c(collapse='; ') )
          ) |>
       dplyr::filter(message!='') |>
       dplyr::mutate(message=sprintf('%s: character values not in codelist: %s',concept_id,message)) |>
@@ -179,10 +179,10 @@ validate_data <- function(data,dsd,order_variables=TRUE,silent=FALSE) {
    ### transform all codelist variables to factors
    tmp_num <- codelists |>
       dplyr::filter(class=='numeric') |>
-      dplyr::pull(constraint_codelist,concept_id)
+      dplyr::pull(constraint_codelist_ds,concept_id)
    tmp_chr <- codelists |>
       dplyr::filter(class=='character') |>
-      dplyr::pull(constraint_codelist,concept_id)
+      dplyr::pull(constraint_codelist_ds,concept_id)
    data <- dplyr::mutate(
       data,
       dplyr::across(

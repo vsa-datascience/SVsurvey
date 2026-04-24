@@ -117,13 +117,44 @@ countryNIS <- inputfolder |>
     select(countryISO3,-valuen,-starts_with('label_')),
     join_by(cl_countryISO3==value)
     ) |>
-  summarize(across(everything(),~.x |> unique() |> str_c(collapse=';')),.by=c(valuen,value)  )
+  summarize(across(everything(),~.x |> unique() |> str_c(collapse=';')),.by=c(valuen,value) ) |>
+  mutate(
+    cl_countrycat2 = ifelse(valuen>=700 & is.na(cl_countrycat2),"other"     ,cl_countrycat2),
+    cl_countrycat1 = ifelse(valuen>=700 & is.na(cl_countrycat1),"notEU27"   ,cl_countrycat1),
+    cl_belgium     = ifelse(valuen>=700 & is.na(cl_belgium)    ,"notBelgium",cl_belgium),
+    )
 
 outputfolder |>
   file.path('cl_countryNIS.xlsx') |>
   writexl::write_xlsx(x=countryNIS)
 
 
+
+
+
+# NIS-codes countries for nationality -------------------------------------
+
+countryNIS_natlty <- inputfolder |>
+  file.path("countrynis_natlty.xlsx") |>
+  readxl::read_xlsx() |>
+  rename(cl_countryISO3=countryISO3) |>
+  mutate(value=as.character(valuen),.after=1) |>
+  arrange(valuen) |>
+  separate_longer_delim(cl_countryISO3,';') |>
+  left_join(
+    select(countryISO3,-valuen,-starts_with('label_')),
+    join_by(cl_countryISO3==value)
+    ) |>
+  summarize(across(everything(),~.x |> unique() |> str_c(collapse=';')),.by=c(valuen,value) ) |>
+  mutate(
+    cl_countrycat2 = ifelse(valuen>=8700 & is.na(cl_countrycat2),"other"     ,cl_countrycat2),
+    cl_countrycat1 = ifelse(valuen>=8700 & is.na(cl_countrycat1),"notEU27"   ,cl_countrycat1),
+    cl_belgium     = ifelse(valuen>=8700 & is.na(cl_belgium)    ,"notBelgium",cl_belgium),
+    )
+
+outputfolder |>
+  file.path('cl_countryNISnatlty.xlsx') |>
+  writexl::write_xlsx(x=countryNIS_natlty)
 
 
 

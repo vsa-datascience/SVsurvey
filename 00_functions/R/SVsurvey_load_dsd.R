@@ -14,7 +14,8 @@
 #'     \item{concept_id}{Concept identifier}
 #'     \item{label_nl}{Dutch-language label for the concept}
 #'     \item{constraint_type}{Type of constraint applied to the variable}
-#'     \item{constraint_codelist}{A list-column where each element is either
+#'     \item{constraint_codelist}{The name of the codelist}
+#'     \item{constraint_codelist_ds}{A list-column where each element is either
 #'       an empty \code{tibble} (if no codelist applies) or a \code{tibble}
 #'       returned by \code{SVsurvey_load_codelist()}}
 #'     \item{constraint_regex}{Regular expression constraint, if applicable}
@@ -35,10 +36,10 @@
 #'     ID must be present in the DSD — no silent dropping of requested concepts.
 #' }
 #'
-#' After filtering, the \code{constraint_codelist} column is mutated into a
-#' list-column by calling \code{SVsurvey_load_codelist()} on each non-\code{NA}
-#' entry, allowing downstream code to access codelist tibbles directly without
-#' additional loading steps.
+#' After filtering, the \code{constraint_codelist_ds} list-column is created
+#' by calling \code{SVsurvey_load_codelist()} on each non-\code{NA}
+#' entry on constraint_codelist, allowing downstream code to access codelist
+#' tibbles directly without additional loading steps.
 #'
 #' @seealso \code{\link{SVsurvey_load_codelist}}
 #'
@@ -91,7 +92,7 @@ SVsurvey_load_dsd <- function(the_concept_ids=NULL) {
 
    dsd <- dsd |>
       dplyr::mutate(
-         constraint_codelist=purrr::map(
+         constraint_codelist_ds=purrr::map(
             constraint_codelist,
             \(x) if(is.na(x)){
                tibble(value=character())
@@ -99,7 +100,8 @@ SVsurvey_load_dsd <- function(the_concept_ids=NULL) {
                SVsurvey_load_codelist(x) |>
                dplyr::select(any_of("valuen"),value,starts_with("label"))
                }
-            )
+            ),
+         .after=constraint_codelist
          )
 
    return(dsd)

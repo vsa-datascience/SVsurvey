@@ -80,10 +80,7 @@ SVsurvey_aggregate_population <- function(year) {
       dplyr::filter(MS_AGE>=18) |>
       dplyr::mutate(
          sex=dplyr::recode_values(CD_SEX,1~'male',2~'female'),
-         agecat7=cut(MS_AGE,
-            c(17,24,34,44,54,64,74,Inf),
-            c("a18_24","a25_34","a35_44","a45_54","a55_64","a65_74","a75plus")
-            ),
+         agecat7=age2agecat7from18(MS_AGE),
          ) |>
       dplyr::left_join(cl_countryNIS,dplyr::join_by(CD_NATLTY==valuen)) |>
       dplyr::left_join(cl_refnislvl4,dplyr::join_by(CD_REFNIS==value)) |>
