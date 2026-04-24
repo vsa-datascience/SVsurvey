@@ -1,0 +1,126 @@
+rm(list=ls())
+devtools::load_all("00_functions")
+
+library(tidyverse)
+
+the_surv_id <- 'SV0001'
+
+
+
+# Load sample data --------------------------------------------------------
+
+data_sample <-
+   r"{..\02_sourcedata\%s\01_sample}" |>
+   sprintf(the_surv_id) |>
+   file.path("SAMP_VSA_SV_THEMATIQUE.xlsx") |>
+   readxl::read_xlsx() |>
+   select(-CD_ZIP_RES,-gemeente,-geslacht,-CNTRY_BTH,-CNTRY_NAT) |>
+   mutate(
+      CD_CNTRY_BTH=replace_na(CD_CNTRY_BTH,"999"),
+      CD_nat=CD_nat-8000,
+      CD_SEX=as.numeric(CD_SEX),
+      CD_CNTRY_BTH=replace_values(CD_CNTRY_BTH,"134"~"999"),
+      CD_nat=replace_values(CD_nat,c(788,785,822,873,782,855,700,821,802,760,789,819,902)~999)
+      )
+
+
+# Load survey data --------------------------------------------------------
+
+tmp_idlink <-
+   r"{..\02_sourcedata\%s\02_survey}" |>
+   sprintf(the_surv_id) |>
+   file.path("Pseudoids_sv (voor link gerealiseerde en geplande, deel SV).xlsx") |>
+   readxl::read_xlsx() |>
+   transmute(Respondentnummer=idfinaal,pseudo_id=`pseudo-id`)
+
+tmp_recodes <-
+   r"{03_process_editions\%s\input\%s_hercodering_obv_tekstvakken.csv}" |>
+   sprintf(the_surv_id,the_surv_id) |>
+   read_csv2(col_types=cols(Respondentnummer='d',variable='c',value='n')) |>
+   pivot_wider(id_cols=Respondentnummer,names_from=variable,values_from=value)
+
+tmp_varlabels <-
+   SVsurvey_read_survey_variables(the_surv_id) |>
+   pull(variable_label,variable)
+
+data_survey <-
+   r'{..\02_sourcedata\SV0001\02_survey\SV - Datafile - Finaal.sav}' |>
+   haven::read_sav() |>
+   left_join(tmp_idlink,join_by(Respondentnummer)) |>
+   coalesce_join(tmp_recodes,join_by(Respondentnummer)) |>
+   labelled_2_tibble(check_varlabels=tmp_varlabels) |>
+   select(-Respondentnummer,-Surveyjaar,-Dubbel,-ID_dubbel,-Eindtijd,-Exportfile,-PricavyInfo) |>
+   mutate(
+      V2_1 = replace_values(V2_1,1534~1934,4307~NA),
+      V2_2 = replace_values(V2_2,21~12),
+      Ingevuld = replace_values(Ingevuld,
+         "Ja (minstens 1 vraag)"~'Volledig antwoord',
+         "Neen, blanco / geen medewerking"~'Weigering',
+         "2.31"~'Gestorven',
+         "2.32"~'Incapabel',
+         "2.36"~'Verkeerde respondent'
+         ),
+    Methodiek = replace_values(Methodiek,
+      "online"~'Online',
+      "schriftelijke vragenlijst"~'Schriftelijk',
+      ),
+    QRcode = case_when(
+      QRcode=="Ja, via een QR-code"~'QR',
+      Methodiek=='Online'~'URL'
+      ),
+    across(
+      where(is.character),
+      \(x) replace_values(x,
+        'Dubbel antwoord'~'Ongeldig',
+        'Geen opgave'~NA,
+        'Niet geselecteerd'~'Neen',
+        "weet niet/geen antwoord"~'Weet niet/geen antwoord',
+        "Meerdere antwoorden"~'Ongeldig'
+        )
+      ),
+    V3 = replace_values(V3,
+      "Betaald werk als werknemer of zelfstandige (al dan niet tijdelijk werkloos)"~'Betaald werk als werknemer, zelfstandige of ambtenaar (al dan niet tijdelijk werkloos)',
+      "Anders (omschrijf) :"~'Een andere situatie'
+      ),
+    V4 = replace_values(V4,"Anders (omschrijf):"~'Een ander diploma'),
+    V6 =  replace_values(V6,"Anders (omschrijf) :"~'Anders'),
+    across(V19|V20|V21|V22|V23,
+      \(x) replace_values(x,
+        "0"~'0: heel ontevreden',
+        "10"~'10: heel tevreden',
+        )
+      ),
+    V33 = replace_values(V33,
+      '0' ~'0: Men kan niet voorzichtig genoeg zijn in de omgang met mensen',
+      '10'~'10: De meeste mensen zijn te vertrouwen',
+      '11'~'10: De meeste mensen zijn te vertrouwen'
+      ),
+    V34 = replace_values(V34,
+      '0' ~'0: De meeste mensen zouden proberen misbruik van mij te maken als zij daartoe de kans krijgen',
+      '10'~'10: De meeste mensen proberen eerlijk te zijn',
+      '11'~'10: De meeste mensen proberen eerlijk te zijn'
+      ),
+    V35 = replace_values(V35,
+      '0' ~'0: Mensen denken meestal aan zichzelf',
+      '10'~'10: Mensen proberen meestal behulpzaam te zijn',
+      '11'~'10: Mensen proberen meestal behulpzaam te zijn'
+      ),
+    )
+
+rm(list=ls(pattern="^tmp"))
+
+
+
+# -------------------------------------------------------------------------
+# Gestructureerde cleaning ------------------------------------------------
+# -------------------------------------------------------------------------
+
+data <- SVsurvey_clean_data(
+   the_surv_id=the_surv_id,
+   data_sample=data_sample,
+   data_survey=data_survey
+   )
+
+
+
+
