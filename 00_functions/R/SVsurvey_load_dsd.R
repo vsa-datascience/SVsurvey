@@ -87,7 +87,7 @@ SVsurvey_load_dsd <- function(the_concept_ids=NULL) {
       }
 
    if ( !is.null(the_concept_ids) ) {
-      dsd <- filter(dsd,concept_id %in% the_concept_ids)
+      dsd <- dplyr::filter(dsd,concept_id %in% the_concept_ids)
       }
 
    dsd <- dsd |>
@@ -95,10 +95,10 @@ SVsurvey_load_dsd <- function(the_concept_ids=NULL) {
          constraint_codelist_ds=purrr::map(
             constraint_codelist,
             \(x) if(is.na(x)){
-               tibble(value=character())
+               tibble::tibble(value=character())
                } else {
                SVsurvey_load_codelist(x) |>
-               dplyr::select(any_of("valuen"),value,starts_with("label"))
+               dplyr::select(any_of("valuen"),value,tidyselect::starts_with("label"))
                }
             ),
          .after=constraint_codelist

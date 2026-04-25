@@ -56,7 +56,6 @@
 #' @importFrom dplyr anti_join left_join coalesce select mutate summarize
 #'   across everything pull n row_number all_of
 #' @importFrom tidyr pivot_longer replace_na
-#' @importFrom stringr str_c
 #'
 #' @export
 coalesce_join <- function(originaldata, replacementdata, by = NULL) {
@@ -105,9 +104,9 @@ coalesce_join <- function(originaldata, replacementdata, by = NULL) {
             i = dplyr::row_number()
          ) |>
          tidyr::pivot_longer(-i) |>
-         dplyr::mutate(value = str_c(name, "=", value)) |>
-         dplyr::summarize(value = str_c(value, collapse = ", "), .by = i) |>
-         dplyr::summarize(value = str_c(value, collapse = "; ")) |>
+         dplyr::mutate(value = paste0(name, "=", value)) |>
+         dplyr::summarize(value = paste0(value, collapse = ", "), .by = i) |>
+         dplyr::summarize(value = paste0(value, collapse = "; ")) |>
          dplyr::pull(value)
       stop("Rows in `replacementdata` with no match in `originaldata`: ",
            missingcases)
@@ -126,10 +125,10 @@ coalesce_join <- function(originaldata, replacementdata, by = NULL) {
       intersect(names(originaldata), names(replacementdata)),
       by_x
       )
-   joined <- left_join(originaldata, replacementdata,
+   joined <- dplyr::left_join(originaldata, replacementdata,
                        by = by, suffix = c("", "_tocoalesce"))
    for (var in coalvars) {
-      joined[[var]] <- dplyr::coalesce(joined[[str_c(var, "_tocoalesce")]],
+      joined[[var]] <- dplyr::coalesce(joined[[paste0(var, "_tocoalesce")]],
                                        joined[[var]])
    }
 

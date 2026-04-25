@@ -104,12 +104,12 @@ SVsurvey_create_codebook <- function(the_surv_id) {
       dplyr::left_join(tmp_dsd,dplyr::join_by(concept_id)) |>
       dplyr::left_join(tmp_questions,dplyr::join_by(concept_id)) |>
       dplyr::mutate(
-         constraint_codelist=purrr::map(
-            constraint_codelist,
-            \(x) dplyr::select(x,any_of(c("valuen","value")))
+         constraint_codelist_ds=purrr::map(
+            constraint_codelist_ds,
+            \(x) dplyr::select(x,tidyselect::any_of(c("valuen","value")))
             )
          ) |>
-      tidyr::unnest(constraint_codelist,keep_empty=TRUE)
+      tidyr::unnest(constraint_codelist_ds,keep_empty=TRUE)
 
    tmp_error <- setdiff(tmp_variables_2$value,tmp_answers$value) |>
       na.omit()
