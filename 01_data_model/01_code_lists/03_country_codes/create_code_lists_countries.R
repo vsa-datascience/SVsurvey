@@ -80,7 +80,7 @@ tmp <- inputfolder |>
    file.path("countryISO.xlsx") |>
    readxl::read_xlsx() |>
    rename(cl_worldregion=worldregion,cl_countrycat2=countrycat2) |>
-   left_join(select(countrycat2,-valuen,-starts_with('label_')),join_by(cl_countrycat2==value)) |>
+   full_join(select(countrycat2,-valuen,-starts_with('label_')),join_by(cl_countrycat2==value)) |>
    relocate(valuen)
 
 countryISO2 <- tmp |>

@@ -43,7 +43,8 @@ validate_data <- function(data,dsd,order_variables=TRUE,silent=FALSE) {
    # check class of variables
    tmp_classes <- list(
       "character"=c('character'),
-      "date"=c('Date','character',"POSIXct","POSIXt"),
+      "date"=c('Date','character'),
+      "datetime"=c("POSIXct","POSIXt",'character'),
       "codelist"=c('character','factor','numeric'),
       "integer"=c('numeric','integer'),
       "numeric"=c('numeric','integer')
@@ -52,7 +53,7 @@ validate_data <- function(data,dsd,order_variables=TRUE,silent=FALSE) {
    dsd <- dsd |>
       dplyr::mutate(
          class=purrr::map(concept_id,\(x) class(data[[x]])),
-         test=purrr::map2_lgl(class,constraint_type,\(x,y) x %in% tmp_classes[[y]]),
+         test=purrr::map2_lgl(class,constraint_type,\(x,y) any(x %in% tmp_classes[[y]])),
          )
 
    tmp <- dsd |>
@@ -101,7 +102,17 @@ validate_data <- function(data,dsd,order_variables=TRUE,silent=FALSE) {
       dplyr::filter(constraint_type=='date' & class=='character') |>
       dplyr::mutate(test = purrr::map_lgl(concept_id,\(x) data[[x]] |> stringr::str_detect(tmp_regex,negate=TRUE) |> any())) |>
       dplyr::filter(test) |>
-      dplyr::mutate(message=sprintf('%s has wrong format: It is character date but its values must be YYYY-MM-DD.',concept_id)) |>
+      dplyr::mutate(message=sprintf('%s has wrong format: It is character date but its values must be "YYYY-MM-DD".',concept_id)) |>
+      dplyr::pull(message)
+   errors <- c(errors,tmp)
+
+   # check character datetimes
+   tmp_regex <- '^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])[ T](0[0-9]|1[0-9]|2[0-3]):[0-5]\\d:[0-5]\\d$'
+   tmp <- dsd |>
+      dplyr::filter(constraint_type=='datetime' & class=='character') |>
+      dplyr::mutate(test = purrr::map_lgl(concept_id,\(x) data[[x]] |> stringr::str_detect(tmp_regex,negate=TRUE) |> any())) |>
+      dplyr::filter(test) |>
+      dplyr::mutate(message=sprintf('%s has wrong format: It is character date but its values must be "YYYY-MM-DD HH:MM:SS".',concept_id)) |>
       dplyr::pull(message)
    errors <- c(errors,tmp)
 
@@ -147,10 +158,11 @@ validate_data <- function(data,dsd,order_variables=TRUE,silent=FALSE) {
       dplyr::filter(class=='numeric' & hasvaluen) |>
       dplyr::mutate(
          constraint_codelist_ds=purrr::map(constraint_codelist_ds,\(x) dplyr::pull(x,'valuen')),
-         message=purrr::map2_chr(concept_id,constraint_codelist_ds,\(x,y) data[[x]] |> na.omit() |> setdiff(y) |> stringr::str_c(collapse='; ') )
+         message1=purrr::map2_chr(concept_id,constraint_codelist_ds,\(x,y) data[[x]] |> na.omit() |> setdiff(y) |> stringr::str_c(collapse=', ') ),
+         message2=purrr::map(constraint_codelist_ds,\(x) stringr::str_flatten(paste0('"',x,'"'),collapse=", ",last=" or "))
          ) |>
-      dplyr::filter(message!='') |>
-      dplyr::mutate(message=sprintf('%s: numeric values not in codelist: %s',concept_id,message)) |>
+      dplyr::filter(message1!='') |>
+      dplyr::mutate(message=sprintf('%s: numeric values not in codelist: %s\n\tShould be from %s',concept_id,message1,message2)) |>
       dplyr::pull(message)
    errors <- c(errors,tmp)
 
@@ -158,10 +170,11 @@ validate_data <- function(data,dsd,order_variables=TRUE,silent=FALSE) {
       dplyr::filter(class %in% c('character','factor') & hasvalue) |>
       dplyr::mutate(
          constraint_codelist_ds=purrr::map(constraint_codelist_ds,\(x) dplyr::pull(x,'value')),
-         message=purrr::map2(concept_id,constraint_codelist_ds,\(x,y) data[[x]] |> na.omit() |> setdiff(y) |> stringr::str_c(collapse='; ') )
+         message1=purrr::map2(concept_id,constraint_codelist_ds,\(x,y) data[[x]] |> na.omit() |> setdiff(y) |> sprintf(fmt='"%s"') |> stringr::str_c(collapse=', ') ),
+         message2=purrr::map(constraint_codelist_ds,\(x) stringr::str_flatten(paste0('"',x,'"'),collapse=", ",last=" or "))
          ) |>
-      dplyr::filter(message!='') |>
-      dplyr::mutate(message=sprintf('%s: character values not in codelist: %s',concept_id,message)) |>
+      dplyr::filter(message1!='') |>
+      dplyr::mutate(message=sprintf('%s: character values not in codelist: %s\n\tShould be from %s',concept_id,message1,message2)) |>
       dplyr::pull(message)
    errors <- c(errors,tmp)
 
@@ -196,11 +209,21 @@ validate_data <- function(data,dsd,order_variables=TRUE,silent=FALSE) {
 
    ### transform all character date variables to dates
    tmp_date <- dsd |>
-      dplyr::filter(constraint_type=='date' & class %in% c('character',"POSIXct","POSIXt")) |>
+      dplyr::filter(constraint_type=='date' & class=='character') |>
       dplyr::pull(concept_id)
    data <- dplyr::mutate(
       data,
       dplyr::across(tidyselect::all_of(tmp_date),as.Date)
+      )
+   rm(tmp_date)
+
+   ### transform all character datetime variables to datetimes
+   tmp_date <- dsd |>
+      dplyr::filter(constraint_type=='date' & class=='character') |>
+      dplyr::pull(concept_id)
+   data <- dplyr::mutate(
+      data,
+      dplyr::across(tidyselect::all_of(tmp_date),lubridate::ymd_hms)
       )
    rm(tmp_date)
 

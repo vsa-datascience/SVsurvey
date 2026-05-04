@@ -31,8 +31,8 @@ rm(tmp)
 
 ### check whether types are right
 tmp <- dsd |>
-  filter(!constraint_type %in% c("character","date","codelist","integer","numeric")) |>
-  mutate(error=sprintf("Type '%s' for concept_id '%s' is not correct. Must be 'character', 'date', 'codelist', 'integer' or 'numeric'.",constraint_type,concept_id)) |>
+  filter(!constraint_type %in% c("character","date","datetime","codelist","integer","numeric")) |>
+  mutate(error=sprintf("Type '%s' for concept_id '%s' is not correct. Must be 'character', 'date', 'datetime', 'codelist', 'integer' or 'numeric'.",constraint_type,concept_id)) |>
   pull(error)
 errors <- c(errors,tmp)
 rm(tmp)

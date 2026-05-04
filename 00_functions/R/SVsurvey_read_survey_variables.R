@@ -39,12 +39,20 @@ SVsurvey_read_survey_variables <- function(the_surv_id) {
    variables <- readxl::read_xlsx(file)
 
    missing_columns <-
-      c("concept_id","variable","variable_label") |>
+      c("variable","concept_id") |>
       setdiff(names(variables))
 
    if ( length(missing_columns)>0 ) {
       missing_columns <- paste(missing_columns,collapse=", ")
       stop("Following columns are missing in ",file," but are required: ",missing_columns)
+      }
+
+   if ( any(is.na(variables$variable)) ) {
+      stop("Missing values in column variable of ",file)
+      }
+
+   if ( any(is.na(variables$concept_id)) ) {
+      stop("Missing values in column concept_id of ",file)
       }
 
    return(variables)

@@ -47,6 +47,11 @@ SVsurvey_clean_data <- function(the_surv_id,data_sample,data_survey) {
       dplyr::mutate(value=dplyr::coalesce(value,new_value))
       }
 
+   tmp_survey_concept_ids <- meta_variables_survey$concept_id
+   if ( 'spt_othx' %in% names(data_survey) ) {
+      tmp_survey_concept_ids <- c(tmp_survey_concept_ids,'spt_othx')
+      }
+
    dsd_survey <-
       SVsurvey_load_dsd(meta_variables_survey$concept_id) |>
       dplyr::rename(new_concept_id=concept_id) |>
@@ -57,6 +62,15 @@ SVsurvey_clean_data <- function(the_surv_id,data_sample,data_survey) {
       dplyr::mutate(
          constraint_codelist_ds=purrr::map(constraint_codelist_ds,tmp_cl_update)
          )
+
+   ### add the self created variables to the dsd
+   tmp_add_vars <- c('spt_othx') |>
+      intersect(names(data_survey))
+   if ( length(tmp_add_vars)>0 ) {
+      tmp_add_dsd <- SVsurvey_load_dsd(tmp_add_vars) |>
+         dplyr::mutate(new_concept_id=concept_id)
+      dsd_survey <- dplyr::bind_rows(dsd_survey,tmp_add_dsd)
+      }
 
    tmp_rv <- dsd_survey |>
       dplyr::filter(constraint_type=="codelist") |>
@@ -176,7 +190,7 @@ SVsurvey_clean_data <- function(the_surv_id,data_sample,data_survey) {
    if ( "bth_year" %in% names(data_inconsist) ) {
       data_inconsist <- data_inconsist |>
          dplyr::mutate(
-            tmp_lftd=surv_year-bth_year-1,
+            tmp_lftd=surv_year-bth_year,
             bth_year = dplyr::case_when(
                tmp_lftd<18 | tmp_lftd>120 ~ NA,
                TRUE ~ bth_year
@@ -629,7 +643,7 @@ SVsurvey_clean_data <- function(the_surv_id,data_sample,data_survey) {
    # cultuurparticipatie
    tmp_vars <- c('cult_conc','cult_cine','cult_opra','cult_danc','cult_thtr','cult_crcs','cult_mscl','cult_cbrt','cult_musm','cult_mnmt','cult_lib')
    if ( all( tmp_vars %in% names(data_derivedvar)) ) {
-      tmp_rcd_act <- tribble(
+      tmp_rcd_act <- tibble::tribble(
          ~val     ,~weekly,~monthly,~participant,~respons,
          'daily'  ,TRUE   ,TRUE    ,TRUE        ,TRUE ,
          'weekly' ,TRUE   ,TRUE    ,TRUE        ,TRUE ,
@@ -687,10 +701,10 @@ SVsurvey_clean_data <- function(the_surv_id,data_sample,data_survey) {
                ),
             ) |>
          dplyr::select(
-            -starts_with('tmp_w_act_'),
-            -starts_with('tmp_m_act_'),
-            -starts_with('tmp_p_act_'),
-            -starts_with('tmp_a_act_')
+            -starts_with('tmp_w_'),
+            -starts_with('tmp_m_'),
+            -starts_with('tmp_p_'),
+            -starts_with('tmp_a_')
             )
       }
    rm(list=ls(pattern="^tmp"))

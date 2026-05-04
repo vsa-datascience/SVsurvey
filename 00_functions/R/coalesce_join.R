@@ -100,7 +100,7 @@ coalesce_join <- function(originaldata, replacementdata, by = NULL) {
          dplyr::select(dplyr::all_of(by_y)) |>
          dplyr::mutate(
             dplyr::across(dplyr::everything(),
-                          ~ .x |> as.character() |> replace_na("NA")),
+                          ~ .x |> as.character() |> tidyr::replace_na("NA")),
             i = dplyr::row_number()
          ) |>
          tidyr::pivot_longer(-i) |>
